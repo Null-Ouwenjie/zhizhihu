@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.lanjiaai.kzhihu.ui.activity.HomeActivity$PlaceholderFragment">
+    tools:context="com.ouwenjie.zhizhihu.ui.activity.HomeActivity$PlaceholderFragment">
 
     <TextView
         android:id="@+id/section_label"

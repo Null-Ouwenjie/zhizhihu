@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lanjiaai.kzhihu.ui.activity.LoadingActivity">
+    tools:context="com.ouwenjie.zhizhihu.ui.activity.LoadingActivity">
 
     <ImageView
         android:id="@+id/loading_img"

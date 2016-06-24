@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lanjiaai.kzhihu.ui.view.swipebacklayout.SwipeBackLayout
+<com.ouwenjie.zhizhihu.ui.view.swipebacklayout.SwipeBackLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe"
     android:layout_width="match_parent"

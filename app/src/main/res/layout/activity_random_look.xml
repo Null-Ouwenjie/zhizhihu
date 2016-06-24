@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lanjiaai.kzhihu.ui.activity.RandomLookActivity">
+    tools:context="com.ouwenjie.zhizhihu.ui.activity.RandomLookActivity">
 
     <ProgressBar
         android:id="@+id/progress"
