@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/nickname_txt"
+        style="@style/TextView.Nickname" />
+
+    <LinearLayout
+        android:id="@+id/primary_info_layout"
+        style="@style/LinearLayout.Attr"
+        android:layout_below="@+id/nickname_txt">
+
+        <TextView
+            android:id="@+id/signature_txt"
+            style="@style/TextView.Attr" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topValue_layout"
+        style="@style/LinearLayout.Attr"
+        android:layout_below="@+id/primary_info_layout"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/top_value_txt"
+            style="@style/TextView.Attr" />
+
+        <TextView
+            android:id="@+id/top_number_txt"
+            style="@style/TextView.Attr" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginTop="3dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardElevation="3dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_white_1000"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/date_and_name_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="2015-09-29  昨日更新" />
+
+        <ImageView
+            android:id="@+id/post_pic_img"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/excerpt_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textSize="12sp"
+            tools:text="摘录了『如何成为一个美丽优雅的孕妇？』、『减肥对外貌的改变有多大？』、『为什么在家庭暴力中，母亲通常比较懦弱？』、『自慰的真正危害有哪些？』、『你听过最搞笑的笑话是什么？』、『读大学读研读博士，学这么长时间值得吗？』、『易中天和袁腾飞谁的历史水平高些？』、『为什么很多大神的经历都是「我一努力就马上牛逼」？』、『有哪些作品表面三观极正，骨子里三观极歪？』、『锁车后车里的人还能摁响喇叭吗？』、『男朋友说「没有篮球都不知道怎么活」是什么心态？』等问题下的32个答案" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

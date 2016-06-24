@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/md_white_1000"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_100"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_avatar_img"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            app:civ_border_color="#33000000"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/user_description_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:text="想把我唱给你听" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/md_grey_100"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_signature_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:padding="8dp"
+            android:text="专业扯淡，业余敲点小代码.." />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/agree_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/ic_like"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/follower_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/ic_follow"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/fav_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/ic_favor_fill"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提问数"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/ask_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="回答数"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/answer_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="专栏数"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/post_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/md_grey_200" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@color/md_white_1000"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/random_look_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_random"
+            android:paddingTop="24dp"
+            android:text="随便看看" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/my_favorite_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_favorite"
+            android:paddingTop="24dp"
+            android:text="我的收藏" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/trends_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_share"
+            android:paddingTop="24dp"
+            android:text="分享应用" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/changed_theme_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_changed_theme"
+            android:paddingTop="24dp"
+            android:text="更换主题" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/md_grey_200" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@color/md_white_1000"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/my_feedback_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_feedback"
+            android:paddingTop="24dp"
+            android:text="意见反馈" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/settings_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_settings"
+            android:paddingTop="24dp"
+            android:text="设置中心" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/about_us_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_about_us"
+            android:paddingTop="24dp"
+            android:text="关于我们" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_100" />
+
+        <TextView
+            android:id="@+id/good_grade_txt"
+            style="@style/MyItemStyle"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/ic_good_grades"
+            android:paddingTop="24dp"
+            android:text="给予好评" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_100"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="七星图" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_100"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="回答数" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/trends_chart"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="赞同数" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/agree_chart"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="粉丝数" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/follower_chart"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

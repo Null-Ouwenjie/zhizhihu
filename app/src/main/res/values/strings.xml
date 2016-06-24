@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">爱看知乎</string>
+
+    <string name="bottom_bar_tab_1">精选</string>
+    <string name="bottom_bar_tab_2">大 V</string>
+    <string name="bottom_bar_tab_3">我</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_home">爱看知乎</string>
+    <string name="title_activity_post_answers">PostAnswersActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_network_not_available">网络不可用</string>
+    <string name="label_operation_failed">操作失败</string>
+    <string name="des_left_image">left image</string>
+    <string name="des_right_image">right image</string>
+    <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string-array name="pref_open_type_list_name">
+        <item>知乎客户端</item>
+        <item>内置浏览器</item>
+        <item>外部浏览器</item>
+    </string-array>
+
+    <string-array name="pref_open_type_list_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+</resources>

@@ -1,0 +1,33 @@
+<resources>
+
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:divider">@color/pink_theme_divider</item>
+
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorSecondary">#727272</item>
+
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+
+    </style>
+
+    <style name="PinkAppTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/pink_theme_primary</item>
+        <item name="colorPrimaryDark">@color/pink_theme_primary_dark</item>
+        <item name="colorAccent">@color/pink_theme_accent</item>
+
+        <item name="android:divider">@color/pink_theme_divider</item>
+
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorSecondary">#727272</item>
+
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle.Pink</item>
+    </style>
+
+</resources>

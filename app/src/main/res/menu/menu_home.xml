@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/posts"
+        android:icon="@drawable/ic_tab_essence"
+        android:title="@string/bottom_bar_tab_1" />
+    <item
+        android:id="@+id/bigv"
+        android:icon="@drawable/ic_tab_bigv"
+        android:title="@string/bottom_bar_tab_2" />
+    <item
+        android:id="@+id/me"
+        android:icon="@drawable/ic_tab_me"
+        android:title="@string/bottom_bar_tab_3" />
+
+</menu>
