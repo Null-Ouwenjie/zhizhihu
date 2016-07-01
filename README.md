@@ -7,4 +7,14 @@ zhihu.com Unofficial Client for Android
 ![](screenshot/2.png)   
 ![](screenshot/3.png)   
 ![](screenshot/4.png)   
+   
+      
+	     
+		    
+			
+			
+
+Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
 
