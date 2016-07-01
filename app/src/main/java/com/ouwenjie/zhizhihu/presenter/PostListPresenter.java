@@ -9,22 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by 文杰 on 2015/10/27.
  */
 public class PostListPresenter extends MVPPresenter<PostListViewInterface> {
 
-    private ApiInterface apiInterface;
+    private ApiInterface mApiInterface;
 
-    private List<Post> posts = new ArrayList<>();
-    private String lastPublishTime;
+    private List<Post> mPosts = new ArrayList<>();
+    private String mLastPublishTime;
 
-    private boolean isLoadingNextPage = false;
+    private boolean mIsLoadingNextPage = false;
 
     public PostListPresenter(PostListViewInterface postListViewInterface) {
         super(postListViewInterface);
-        apiInterface = new ApiImp();
+        mApiInterface = new ApiImp();
     }
 
     @Override
@@ -34,15 +35,15 @@ public class PostListPresenter extends MVPPresenter<PostListViewInterface> {
 
     @Override
     public void destroy() {
-
+        mCompositeSubscription.clear();
     }
 
     /**
      * 初始化,加载第一页
      */
     public void initData() {
-        viewInterface.setSwipeRefreshing(true);
-        apiInterface.getPosts()
+        mViewInterface.setSwipeRefreshing(true);
+        Subscription sub = mApiInterface.getPosts()
                 .subscribe(new Subscriber<List<Post>>() {
                     @Override
                     public void onCompleted() {
@@ -51,26 +52,27 @@ public class PostListPresenter extends MVPPresenter<PostListViewInterface> {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        doRxError(e);
                     }
 
                     @Override
                     public void onNext(List<Post> list) {
-                        posts = list;
-                        viewInterface.initList(posts);
-                        lastPublishTime = posts.get(posts.size() - 1).getPublishtime();
-                        viewInterface.setSwipeRefreshing(false);
+                        mPosts = list;
+                        mViewInterface.initList(mPosts);
+                        mLastPublishTime = mPosts.get(mPosts.size() - 1).getPublishtime();
+                        mViewInterface.setSwipeRefreshing(false);
                     }
                 });
+        mCompositeSubscription.add(sub);
     }
 
     /**
      * 加载下一页
      */
     public void loadNextPage() {
-        viewInterface.setSwipeRefreshing(true);
-        isLoadingNextPage = true;
-        apiInterface.getPosts(lastPublishTime)
+        mViewInterface.setSwipeRefreshing(true);
+        mIsLoadingNextPage = true;
+        Subscription sub = mApiInterface.getPosts(mLastPublishTime)
                 .subscribe(new Subscriber<List<Post>>() {
                     @Override
                     public void onCompleted() {
@@ -84,20 +86,21 @@ public class PostListPresenter extends MVPPresenter<PostListViewInterface> {
 
                     @Override
                     public void onNext(List<Post> list) {
-                        posts.addAll(list);
-                        viewInterface.refreshList();
-                        lastPublishTime = posts.get(posts.size() - 1).getPublishtime();
-                        viewInterface.setSwipeRefreshing(false);
-                        isLoadingNextPage = false;
+                        mPosts.addAll(list);
+                        mViewInterface.refreshList();
+                        mLastPublishTime = mPosts.get(mPosts.size() - 1).getPublishtime();
+                        mViewInterface.setSwipeRefreshing(false);
+                        mIsLoadingNextPage = false;
                     }
                 });
+        mCompositeSubscription.add(sub);
     }
 
     public boolean hasData() {
-        return !posts.isEmpty();
+        return !mPosts.isEmpty();
     }
 
     public boolean isLoadingNextPage() {
-        return isLoadingNextPage;
+        return mIsLoadingNextPage;
     }
 }

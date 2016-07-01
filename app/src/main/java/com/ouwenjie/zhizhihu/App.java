@@ -15,13 +15,15 @@ import io.realm.RealmConfiguration;
  */
 public class App extends Application {
 
-    private static Context context;
+    private static Context sContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
+        sContext = getApplicationContext();
+
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(getApplicationContext()).build());
+
         if (AppConfig.isDebug) {
             Stetho.initializeWithDefaults(this);  // 开启 Stetho 调试模式
             Logger.init("=LingKu=").logLevel(LogLevel.FULL);
@@ -32,7 +34,7 @@ public class App extends Application {
     }
 
     public static Context getContext() {
-        return context;
+        return sContext;
     }
 
 }

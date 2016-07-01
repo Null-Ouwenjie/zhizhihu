@@ -43,30 +43,23 @@ public class UserProfileActivity extends SwipeBackActivity {
     public static final String KEY_USER_HASH = "user_profile_user_hash";
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.top_answer_list_view)
-    XRecyclerView topAnswerListView;
+    XRecyclerView mTopAnswerListView;
     @Bind(R.id.progress)
-    ProgressBar progress;
+    ProgressBar mProgressBar;
 
-    CircleImageView userAvatarImg;
-    TextView userDescriptionTxt;
-    TextView userSignatureTxt;
-    TextView agreeCountTxt;
-    TextView followerCountTxt;
-    TextView favCountTxt;
-    TextView askCountTxt;
-    TextView answerCountTxt;
-    TextView postCountTxt;
+    CircleImageView mUserAvatarImg;
+    TextView mUserDescriptionTxt;
+    TextView mUserSignatureTxt;
+    TextView mAgreeCountTxt;
+    TextView mFollowerCountTxt;
+    TextView mFavCountTxt;
+    TextView mAskCountTxt;
+    TextView mAnswerCountTxt;
+    TextView mPostCountTxt;
 
-    private LineChart trendsChart;
-    private LineChart agreeChart;
-    private LineChart followerChart;
-
-    private String userHash;
-    private LinearLayoutManager layoutManager;
-    private Adapter adapter;
-
+    private String mUserHash;
 
     public static Intent getStartIntent(Context context, String userHash) {
         Intent intent = new Intent(context, UserProfileActivity.class);
@@ -79,11 +72,11 @@ public class UserProfileActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(getTitle());
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(
+        mToolbar.setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -91,17 +84,17 @@ public class UserProfileActivity extends SwipeBackActivity {
                     }
                 }
         );
-        userHash = getIntent().getStringExtra(KEY_USER_HASH);
-        new ApiImp().getUserDetail(userHash)
+        mUserHash = getIntent().getStringExtra(KEY_USER_HASH);
+        new ApiImp().getUserDetail(mUserHash)
                 .subscribe(new Subscriber<UserDetail>() {
                     @Override
                     public void onCompleted() {
-                        progress.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        progress.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -115,10 +108,10 @@ public class UserProfileActivity extends SwipeBackActivity {
         setTitle(detail.getName());
 
         List<UserDetail.TopAnswer> objects = detail.getTopanswers();
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        topAnswerListView.setLayoutManager(layoutManager);
-        adapter = new Adapter(this, objects);
+        mTopAnswerListView.setLayoutManager(layoutManager);
+        Adapter adapter = new Adapter(this, objects);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -148,7 +141,7 @@ public class UserProfileActivity extends SwipeBackActivity {
                 }
             }
         });
-        topAnswerListView.setAdapter(adapter);
+        mTopAnswerListView.setAdapter(adapter);
 
         initHeaderView(detail);
 
@@ -157,16 +150,16 @@ public class UserProfileActivity extends SwipeBackActivity {
     private void initHeaderView(UserDetail detail) {
 
         View headerView = LayoutInflater.from(this)
-                .inflate(R.layout.layout_user_profile_header, topAnswerListView, false);
-        userAvatarImg = ButterKnife.findById(headerView, R.id.user_avatar_img);
-        userDescriptionTxt = ButterKnife.findById(headerView, R.id.user_description_txt);
-        userSignatureTxt = ButterKnife.findById(headerView, R.id.user_signature_txt);
-        agreeCountTxt = ButterKnife.findById(headerView, R.id.agree_count_txt);
-        followerCountTxt = ButterKnife.findById(headerView, R.id.follower_count_txt);
-        favCountTxt = ButterKnife.findById(headerView, R.id.fav_count_txt);
-        askCountTxt = ButterKnife.findById(headerView, R.id.ask_count_txt);
-        answerCountTxt = ButterKnife.findById(headerView, R.id.answer_count_txt);
-        postCountTxt = ButterKnife.findById(headerView, R.id.post_count_txt);
+                .inflate(R.layout.layout_user_profile_header, mTopAnswerListView, false);
+        mUserAvatarImg = ButterKnife.findById(headerView, R.id.user_avatar_img);
+        mUserDescriptionTxt = ButterKnife.findById(headerView, R.id.user_description_txt);
+        mUserSignatureTxt = ButterKnife.findById(headerView, R.id.user_signature_txt);
+        mAgreeCountTxt = ButterKnife.findById(headerView, R.id.agree_count_txt);
+        mFollowerCountTxt = ButterKnife.findById(headerView, R.id.follower_count_txt);
+        mFavCountTxt = ButterKnife.findById(headerView, R.id.fav_count_txt);
+        mAskCountTxt = ButterKnife.findById(headerView, R.id.ask_count_txt);
+        mAnswerCountTxt = ButterKnife.findById(headerView, R.id.answer_count_txt);
+        mPostCountTxt = ButterKnife.findById(headerView, R.id.post_count_txt);
 
 
         List<String> xData = new ArrayList<>();
@@ -186,9 +179,9 @@ public class UserProfileActivity extends SwipeBackActivity {
         LineDataSet agreeDataSet = new LineDataSet(agreeDatas, "赞同数");
         LineDataSet followerDataSet = new LineDataSet(followerDatas, "粉丝数");
 
-        trendsChart = ButterKnife.findById(headerView, R.id.trends_chart);
-        agreeChart = ButterKnife.findById(headerView, R.id.agree_chart);
-        followerChart = ButterKnife.findById(headerView, R.id.follower_chart);
+        LineChart trendsChart = ButterKnife.findById(headerView, R.id.trends_chart);
+        LineChart agreeChart = ButterKnife.findById(headerView, R.id.agree_chart);
+        LineChart followerChart = ButterKnife.findById(headerView, R.id.follower_chart);
 
         XAxis xAxis = trendsChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -212,19 +205,19 @@ public class UserProfileActivity extends SwipeBackActivity {
         Glide.with(this)
                 .load(detail.getAvatar())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(userAvatarImg);
+                .into(mUserAvatarImg);
 
-        userDescriptionTxt.setText(detail.getDescription());
-        userSignatureTxt.setText(detail.getSignature());
+        mUserDescriptionTxt.setText(detail.getDescription());
+        mUserSignatureTxt.setText(detail.getSignature());
 
-        agreeCountTxt.setText(detail.getDetail().getAgree());
-        followerCountTxt.setText(detail.getDetail().getFollower());
-        favCountTxt.setText(detail.getDetail().getFav());
-        askCountTxt.setText(detail.getDetail().getAsk());
-        answerCountTxt.setText(detail.getDetail().getAnswer());
-        postCountTxt.setText(detail.getDetail().getPost());
+        mAgreeCountTxt.setText(detail.getDetail().getAgree());
+        mFollowerCountTxt.setText(detail.getDetail().getFollower());
+        mFavCountTxt.setText(detail.getDetail().getFav());
+        mAskCountTxt.setText(detail.getDetail().getAsk());
+        mAnswerCountTxt.setText(detail.getDetail().getAnswer());
+        mPostCountTxt.setText(detail.getDetail().getPost());
 
-        topAnswerListView.addHeaderView(headerView);
+        mTopAnswerListView.addHeaderView(headerView);
 
     }
 

@@ -27,20 +27,20 @@ import io.realm.Realm;
  */
 public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.ViewHolder> {
 
-    List<Answer> answersList;
-    List<Answer> favoriteList;
-    Context context;
-    OnItemClickListener onItemClickListener;
+    private List<Answer> mAnswerList;
+    private List<Answer> mFavoriteList;
+    private Context mContext;
+    private OnItemClickListener mOnItemClickListener;
 
-    public PostAnswerAdapter(Activity activity, List<Answer> answersList) {
-        this.context = activity;
-        this.answersList = answersList;
-        favoriteList = Realm.getDefaultInstance().allObjects(Answer.class);
+    public PostAnswerAdapter(Activity activity, List<Answer> mAnswerList) {
+        this.mContext = activity;
+        this.mAnswerList = mAnswerList;
+        mFavoriteList = Realm.getDefaultInstance().allObjects(Answer.class);
     }
 
-    public PostAnswerAdapter(Fragment fragment, List<Answer> answersList) {
-        this.context = fragment.getContext();
-        this.answersList = answersList;
+    public PostAnswerAdapter(Fragment fragment, List<Answer> mAnswerList) {
+        this.mContext = fragment.getContext();
+        this.mAnswerList = mAnswerList;
     }
 
     @Override
@@ -50,16 +50,16 @@ public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.Vi
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, (Integer) itemView.getTag());
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(v, (Integer) itemView.getTag());
                 }
             }
         });
         itemView.findViewById(R.id.favorite_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onFavoriteClick(v, (Integer) itemView.getTag());
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onFavoriteClick(v, (Integer) itemView.getTag());
                 }
             }
         });
@@ -69,7 +69,7 @@ public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemView.setTag(position);
-        Answer answer = answersList.get(position);
+        Answer answer = mAnswerList.get(position);
 
         String title = answer.getTitle();
         String time = answer.getTime();
@@ -86,25 +86,25 @@ public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.Vi
         holder.authorNameTxt.setText(authorName);
         holder.likesTxt.setText(vote);
 
-        Glide.with(context)
+        Glide.with(mContext)
                 .load(avatar)
                 .fitCenter()
                 .crossFade()
                 .into(holder.authorAvatarImg);
 
         boolean isFavorite = false;
-        for (Answer favorite : favoriteList) {
+        for (Answer favorite : mFavoriteList) {
             if (favorite.getAnswerid().equals(answerid)) {
                 isFavorite = true;
                 break;
             }
         }
         if (isFavorite) {
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(R.drawable.ic_favorite_light)
                     .into(holder.favoriteImg);
         } else {
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(R.drawable.ic_favorite_normal)
                     .into(holder.favoriteImg);
         }
@@ -112,7 +112,7 @@ public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return answersList.size();
+        return mAnswerList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -139,7 +139,7 @@ public class PostAnswerAdapter extends RecyclerView.Adapter<PostAnswerAdapter.Vi
 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {

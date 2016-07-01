@@ -30,7 +30,6 @@ import com.ouwenjie.zhizhihu.R;
 import com.ouwenjie.zhizhihu.common.Constant;
 import com.ouwenjie.zhizhihu.common.LLog;
 import com.ouwenjie.zhizhihu.common.ThemeManager;
-import com.ouwenjie.zhizhihu.model.PreferencesUtil;
 import com.ouwenjie.zhizhihu.model.api.ZhiHu;
 import com.ouwenjie.zhizhihu.model.entity.SearchUser;
 import com.ouwenjie.zhizhihu.model.entity.UserDetail;
@@ -44,6 +43,7 @@ import com.ouwenjie.zhizhihu.ui.activity.SettingsActivity;
 import com.ouwenjie.zhizhihu.ui.activity.UserSearchActivity;
 import com.ouwenjie.zhizhihu.ui.activity.WebBrowserActivity;
 import com.ouwenjie.zhizhihu.ui.viewInterface.UserCenterViewInterface;
+import com.ouwenjie.zhizhihu.utils.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,43 +59,40 @@ import rx.Subscriber;
  */
 public class UserCenterFragment extends BaseFragment implements UserCenterViewInterface, View.OnClickListener {
 
-    HomeActivity activity;
+    private HomeActivity mHomeActivity;
 
     @Bind(R.id.my_trends_list_view)
-    XRecyclerView myTrendsListView;
+    XRecyclerView mMyTrendsListView;
 
-    CircleImageView userAvatarImg;
-    TextView userDescriptionTxt;
-    TextView userSignatureTxt;
-    TextView agreeCountTxt;
-    TextView followerCountTxt;
-    TextView favCountTxt;
-    TextView askCountTxt;
-    TextView answerCountTxt;
-    TextView postCountTxt;
+    CircleImageView mUserAvatarImg;
+    TextView mUserDescriptionTxt;
+    TextView mUserSignatureTxt;
+    TextView mAgreeCountTxt;
+    TextView mFollowerCountTxt;
+    TextView mFavCountTxt;
+    TextView mAskCountTxt;
+    TextView mAnswerCountTxt;
+    TextView mPostCountTxt;
 
+    TextView mRandomLookTxt;
+    TextView mTrendsTxt;
+    TextView mMyFavoriteTxt;
+    TextView mChangedThemeTxt;
 
-    TextView randomLookTxt;
-    TextView trendsTxt;
-    TextView myFavoriteTxt;
-    TextView changedThemeTxt;
+    TextView mFeedbackTxt;
+    TextView mSettingsTxt;
+    TextView mAboutUsTxt;
+    TextView mGoodGradeTxt;
 
-    TextView feedbackTxt;
-    TextView settingsTxt;
-    TextView aboutUsTxt;
-    TextView goodGradeTxt;
+    private LineChart mTrendsChart;
+    private LineChart mAgreeChart;
+    private LineChart mFollowerChart;
 
+    private Adapter mAdapter;
 
-    private LineChart trendsChart;
-    private LineChart agreeChart;
-    private LineChart followerChart;
-
-    private LinearLayoutManager layoutManager;
-    private Adapter adapter;
-
-    private boolean hasBindUser;
-    private UserDetail userDetailInfo;
-    private List<UserDetail.TopAnswer> answers;
+    private boolean mHasBindUser;
+    private UserDetail mUserDetailInfo;
+    private List<UserDetail.TopAnswer> mTopAnswers;
 
     public UserCenterFragment() {
     }
@@ -116,7 +113,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.activity = (HomeActivity) activity;
+        this.mHomeActivity = (HomeActivity) activity;
     }
 
     @Nullable
@@ -141,7 +138,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
 
         String userString = PreferencesUtil.getString(getContext().getApplicationContext(), Constant.KEY_BIND_USER);
         if (!TextUtils.isEmpty(userString)) {
-            hasBindUser = true;
+            mHasBindUser = true;
             final SearchUser user = new Gson().fromJson(userString, SearchUser.class);
             new ApiImp().getUserDetail(user.getHash())
                     .subscribe(new Subscriber<UserDetail>() {
@@ -157,16 +154,16 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
 
                         @Override
                         public void onNext(UserDetail userDetail) {
-                            userDetailInfo = userDetail;
+                            mUserDetailInfo = userDetail;
                             initData();
                         }
                     });
         } else {
-            hasBindUser = false;
+            mHasBindUser = false;
             Glide.with(this)
                     .load(R.drawable.ic_default_avatar)
-                    .into(userAvatarImg);
-            userDescriptionTxt.setText("请点击绑定自己的知乎账号");
+                    .into(mUserAvatarImg);
+            mUserDescriptionTxt.setText("请点击绑定自己的知乎账号");
         }
 
     }
@@ -177,16 +174,16 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
     }
 
     private void initView() {
-        layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        if (answers == null) {
-            answers = new ArrayList<>();
+        if (mTopAnswers == null) {
+            mTopAnswers = new ArrayList<>();
         }
-        adapter = new Adapter(getContext(), answers);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
+        mAdapter = new Adapter(getContext(), mTopAnswers);
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UserDetail.TopAnswer answer = userDetailInfo.getTopanswers().get(position);
+                UserDetail.TopAnswer answer = mUserDetailInfo.getTopanswers().get(position);
                 String url = "http://www.zhihu.com" + answer.getLink();
                 LLog.e("get url = ", url);
                 int openType = Integer.parseInt(getContext().getSharedPreferences("com.ouwenjie.kzhihu_preferences", Activity.MODE_PRIVATE)
@@ -212,83 +209,83 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
                 }
             }
         });
-        myTrendsListView.setLayoutManager(layoutManager);
-        myTrendsListView.setAdapter(adapter);
+        mMyTrendsListView.setLayoutManager(layoutManager);
+        mMyTrendsListView.setAdapter(mAdapter);
 
         View headerView = LayoutInflater.from(getContext())
-                .inflate(R.layout.layout_my_profile_header, myTrendsListView, false);
+                .inflate(R.layout.layout_my_profile_header, mMyTrendsListView, false);
 
-        userAvatarImg = ButterKnife.findById(headerView, R.id.user_avatar_img);
-        userDescriptionTxt = ButterKnife.findById(headerView, R.id.user_description_txt);
-        userSignatureTxt = ButterKnife.findById(headerView, R.id.user_signature_txt);
-        agreeCountTxt = ButterKnife.findById(headerView, R.id.agree_count_txt);
-        followerCountTxt = ButterKnife.findById(headerView, R.id.follower_count_txt);
-        favCountTxt = ButterKnife.findById(headerView, R.id.fav_count_txt);
-        askCountTxt = ButterKnife.findById(headerView, R.id.ask_count_txt);
-        answerCountTxt = ButterKnife.findById(headerView, R.id.answer_count_txt);
-        postCountTxt = ButterKnife.findById(headerView, R.id.post_count_txt);
+        mUserAvatarImg = ButterKnife.findById(headerView, R.id.user_avatar_img);
+        mUserDescriptionTxt = ButterKnife.findById(headerView, R.id.user_description_txt);
+        mUserSignatureTxt = ButterKnife.findById(headerView, R.id.user_signature_txt);
+        mAgreeCountTxt = ButterKnife.findById(headerView, R.id.agree_count_txt);
+        mFollowerCountTxt = ButterKnife.findById(headerView, R.id.follower_count_txt);
+        mFavCountTxt = ButterKnife.findById(headerView, R.id.fav_count_txt);
+        mAskCountTxt = ButterKnife.findById(headerView, R.id.ask_count_txt);
+        mAnswerCountTxt = ButterKnife.findById(headerView, R.id.answer_count_txt);
+        mPostCountTxt = ButterKnife.findById(headerView, R.id.post_count_txt);
 
-        userAvatarImg.setOnClickListener(this);
-        userDescriptionTxt.setOnClickListener(this);
-        userSignatureTxt.setOnClickListener(this);
-        agreeCountTxt.setOnClickListener(this);
-        followerCountTxt.setOnClickListener(this);
-        favCountTxt.setOnClickListener(this);
-        askCountTxt.setOnClickListener(this);
-        answerCountTxt.setOnClickListener(this);
-        postCountTxt.setOnClickListener(this);
+        mUserAvatarImg.setOnClickListener(this);
+        mUserDescriptionTxt.setOnClickListener(this);
+        mUserSignatureTxt.setOnClickListener(this);
+        mAgreeCountTxt.setOnClickListener(this);
+        mFollowerCountTxt.setOnClickListener(this);
+        mFavCountTxt.setOnClickListener(this);
+        mAskCountTxt.setOnClickListener(this);
+        mAnswerCountTxt.setOnClickListener(this);
+        mPostCountTxt.setOnClickListener(this);
 
-        randomLookTxt = ButterKnife.findById(headerView, R.id.random_look_txt);
-        trendsTxt = ButterKnife.findById(headerView, R.id.trends_txt);
-        myFavoriteTxt = ButterKnife.findById(headerView, R.id.my_favorite_txt);
-        changedThemeTxt = ButterKnife.findById(headerView, R.id.changed_theme_txt);
-        feedbackTxt = ButterKnife.findById(headerView, R.id.my_feedback_txt);
-        settingsTxt = ButterKnife.findById(headerView, R.id.settings_txt);
-        aboutUsTxt = ButterKnife.findById(headerView, R.id.about_us_txt);
-        goodGradeTxt = ButterKnife.findById(headerView, R.id.good_grade_txt);
+        mRandomLookTxt = ButterKnife.findById(headerView, R.id.random_look_txt);
+        mTrendsTxt = ButterKnife.findById(headerView, R.id.trends_txt);
+        mMyFavoriteTxt = ButterKnife.findById(headerView, R.id.my_favorite_txt);
+        mChangedThemeTxt = ButterKnife.findById(headerView, R.id.changed_theme_txt);
+        mFeedbackTxt = ButterKnife.findById(headerView, R.id.my_feedback_txt);
+        mSettingsTxt = ButterKnife.findById(headerView, R.id.settings_txt);
+        mAboutUsTxt = ButterKnife.findById(headerView, R.id.about_us_txt);
+        mGoodGradeTxt = ButterKnife.findById(headerView, R.id.good_grade_txt);
 
-        randomLookTxt.setOnClickListener(this);
-        trendsTxt.setOnClickListener(this);
-        myFavoriteTxt.setOnClickListener(this);
-        changedThemeTxt.setOnClickListener(this);
-        feedbackTxt.setOnClickListener(this);
-        settingsTxt.setOnClickListener(this);
-        aboutUsTxt.setOnClickListener(this);
-        goodGradeTxt.setOnClickListener(this);
+        mRandomLookTxt.setOnClickListener(this);
+        mTrendsTxt.setOnClickListener(this);
+        mMyFavoriteTxt.setOnClickListener(this);
+        mChangedThemeTxt.setOnClickListener(this);
+        mFeedbackTxt.setOnClickListener(this);
+        mSettingsTxt.setOnClickListener(this);
+        mAboutUsTxt.setOnClickListener(this);
+        mGoodGradeTxt.setOnClickListener(this);
 
-        trendsChart = ButterKnife.findById(headerView, R.id.trends_chart);
-        agreeChart = ButterKnife.findById(headerView, R.id.agree_chart);
-        followerChart = ButterKnife.findById(headerView, R.id.follower_chart);
+        mTrendsChart = ButterKnife.findById(headerView, R.id.trends_chart);
+        mAgreeChart = ButterKnife.findById(headerView, R.id.agree_chart);
+        mFollowerChart = ButterKnife.findById(headerView, R.id.follower_chart);
 
-        myTrendsListView.addHeaderView(headerView);
+        mMyTrendsListView.addHeaderView(headerView);
     }
 
     private void initData() {
-        answers.addAll(userDetailInfo.getTopanswers());
-        adapter.notifyDataSetChanged();
+        mTopAnswers.addAll(mUserDetailInfo.getTopanswers());
+        mAdapter.notifyDataSetChanged();
 
         Glide.with(this)
-                .load(userDetailInfo.getAvatar())
+                .load(mUserDetailInfo.getAvatar())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(userAvatarImg);
+                .into(mUserAvatarImg);
 
-        userDescriptionTxt.setText(userDetailInfo.getDescription());
-        userSignatureTxt.setText(userDetailInfo.getSignature());
+        mUserDescriptionTxt.setText(mUserDetailInfo.getDescription());
+        mUserSignatureTxt.setText(mUserDetailInfo.getSignature());
 
-        agreeCountTxt.setText(userDetailInfo.getDetail().getAgree());
-        followerCountTxt.setText(userDetailInfo.getDetail().getFollower());
-        favCountTxt.setText(userDetailInfo.getDetail().getFav());
-        askCountTxt.setText(userDetailInfo.getDetail().getAsk());
-        answerCountTxt.setText(userDetailInfo.getDetail().getAnswer());
-        postCountTxt.setText(userDetailInfo.getDetail().getPost());
+        mAgreeCountTxt.setText(mUserDetailInfo.getDetail().getAgree());
+        mFollowerCountTxt.setText(mUserDetailInfo.getDetail().getFollower());
+        mFavCountTxt.setText(mUserDetailInfo.getDetail().getFav());
+        mAskCountTxt.setText(mUserDetailInfo.getDetail().getAsk());
+        mAnswerCountTxt.setText(mUserDetailInfo.getDetail().getAnswer());
+        mPostCountTxt.setText(mUserDetailInfo.getDetail().getPost());
 
         List<String> xData = new ArrayList<>();
         List<Entry> answerDatas = new ArrayList<>();
         List<Entry> agreeDatas = new ArrayList<>();
         List<Entry> followerDatas = new ArrayList<>();
 
-        for (int i = 0; i < userDetailInfo.getTrend().size(); i++) {
-            UserDetail.Trend trend = userDetailInfo.getTrend().get(i);
+        for (int i = 0; i < mUserDetailInfo.getTrend().size(); i++) {
+            UserDetail.Trend trend = mUserDetailInfo.getTrend().get(i);
             xData.add(trend.getDate());
             answerDatas.add(new Entry(Float.parseFloat(trend.getAnswer()), i));
             agreeDatas.add(new Entry(Float.parseFloat(trend.getAgree()), i));
@@ -298,23 +295,23 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         LineDataSet agreeDataSet = new LineDataSet(agreeDatas, "赞同数");
         LineDataSet followerDataSet = new LineDataSet(followerDatas, "粉丝数");
 
-        XAxis xAxis = trendsChart.getXAxis();
+        XAxis xAxis = mTrendsChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         LineData data = new LineData(xData, answerDataSet);
-        trendsChart.setData(data);
-        trendsChart.invalidate();
+        mTrendsChart.setData(data);
+        mTrendsChart.invalidate();
 
-        XAxis agreeX = agreeChart.getXAxis();
+        XAxis agreeX = mAgreeChart.getXAxis();
         agreeX.setPosition(XAxis.XAxisPosition.BOTTOM);
         LineData agreeData = new LineData(xData, agreeDataSet);
-        agreeChart.setData(agreeData);
-        agreeChart.invalidate();
+        mAgreeChart.setData(agreeData);
+        mAgreeChart.invalidate();
 
-        XAxis followerX = followerChart.getXAxis();
+        XAxis followerX = mFollowerChart.getXAxis();
         followerX.setPosition(XAxis.XAxisPosition.BOTTOM);
         LineData followerData = new LineData(xData, followerDataSet);
-        followerChart.setData(followerData);
-        followerChart.invalidate();
+        mFollowerChart.setData(followerData);
+        mFollowerChart.invalidate();
 
 
     }
@@ -354,7 +351,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         switch (v.getId()) {
             case R.id.user_avatar_img:
             case R.id.user_description_txt:
-                if (hasBindUser) {
+                if (mHasBindUser) {
 
                 } else {
                     startActivity(new Intent(getContext(), UserSearchActivity.class));
@@ -385,7 +382,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
                 break;
             case R.id.changed_theme_txt:
                 ThemeManager.changeTheme(getContext());
-                activity.reload();
+                mHomeActivity.reload();
                 break;
 
             case R.id.my_feedback_txt:

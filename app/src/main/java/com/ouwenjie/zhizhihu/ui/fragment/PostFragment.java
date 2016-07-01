@@ -27,19 +27,18 @@ import butterknife.ButterKnife;
 public class PostFragment extends Fragment {
 
     @Bind(R.id.tabs)
-    TabLayout tabs;
+    TabLayout mTabLayout;
     @Bind(R.id.appbar)
-    AppBarLayout appbar;
+    AppBarLayout mAppBarLayout;
     @Bind(R.id.container)
-    ViewPager container;
+    ViewPager mViewPager;
     @Bind(R.id.coordinator)
-    CoordinatorLayout coordinator;
+    CoordinatorLayout mCoordinator;
 
-    private PagerAdapter pagerAdapter;
-    private FragmentManager fm;
+    private PagerAdapter mPagerAdapter;
 
-    private List<Fragment> fragments;
-    private List<String> titles;
+    private List<Fragment> mFragments;
+    private List<String> mTitles;
 
     public PostFragment() {
         // Required empty public constructor
@@ -77,41 +76,41 @@ public class PostFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (fragments == null) {
-            titles = new ArrayList<>();
-            fragments = new ArrayList<>();
-            titles.add("推荐");
-            fragments.add(PostListFragment.newInstance(null));
+        if (mFragments == null) {
+            mTitles = new ArrayList<>();
+            mFragments = new ArrayList<>();
+            mTitles.add("推荐");
+            mFragments.add(PostListFragment.newInstance(null));
 
-            titles.add("大学生");
-            fragments.add(TopicFragment.newInstance("大学生"));
+            mTitles.add("大学生");
+            mFragments.add(TopicFragment.newInstance("大学生"));
 
-            titles.add("学习");
-            fragments.add(TopicFragment.newInstance("学习"));
+            mTitles.add("学习");
+            mFragments.add(TopicFragment.newInstance("学习"));
 
-            titles.add("生活");
-            fragments.add(TopicFragment.newInstance("生活"));
+            mTitles.add("生活");
+            mFragments.add(TopicFragment.newInstance("生活"));
 
-            titles.add("感情");
-            fragments.add(TopicFragment.newInstance("感情"));
+            mTitles.add("感情");
+            mFragments.add(TopicFragment.newInstance("感情"));
 
-            titles.add("社会");
-            fragments.add(TopicFragment.newInstance("社会"));
+            mTitles.add("社会");
+            mFragments.add(TopicFragment.newInstance("社会"));
 
-            titles.add("职业");
-            fragments.add(TopicFragment.newInstance("职业"));
+            mTitles.add("职业");
+            mFragments.add(TopicFragment.newInstance("职业"));
 
 
         }
 
-        fm = getChildFragmentManager();
-        pagerAdapter = new PagerAdapter(fm);
-        container.setAdapter(pagerAdapter);
-        container.setOffscreenPageLimit(4);
-        container.addOnPageChangeListener(getPageChangeListener());
-        tabs.setupWithViewPager(container);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        FragmentManager fm = getChildFragmentManager();
+        mPagerAdapter = new PagerAdapter(fm);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.addOnPageChangeListener(getPageChangeListener());
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private ViewPager.OnPageChangeListener getPageChangeListener() {
@@ -141,7 +140,7 @@ public class PostFragment extends Fragment {
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * one of the sections/mTabLayout/pages.
      */
     public class PagerAdapter extends FragmentPagerAdapter {
 
@@ -153,17 +152,17 @@ public class PostFragment extends Fragment {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return fragments.get(position);
+            return mFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return fragments.size();
+            return mFragments.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return titles.get(position);
+            return mTitles.get(position);
         }
 
     }

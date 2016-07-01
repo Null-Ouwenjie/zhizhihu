@@ -36,15 +36,12 @@ public class TopUserListFragment extends SwipeRefreshFragment implements TopUser
     private static final String TOP_USER_TYPE = "TopUserType";
 
     @Bind(R.id.top_user_list_view)
-    RecyclerView topUserListView;
+    RecyclerView mTopUserListView;
 
-    private LinearLayoutManager layoutManager;
-    private Adapter adapter;
+    private List<TopUser> mTopUsers = new ArrayList<>();
+    private TopUserType mTopUserType;
 
-    private List<TopUser> userDataList = new ArrayList<>();
-    private TopUserType userType;
-
-    private TopUserListPresenter presenter;
+    private TopUserListPresenter mPresenter;
 
     public TopUserListFragment() {
         // Required empty public constructor
@@ -62,7 +59,7 @@ public class TopUserListFragment extends SwipeRefreshFragment implements TopUser
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userType = TopUserType.valueOf(getArguments().getString(TOP_USER_TYPE));
+            mTopUserType = TopUserType.valueOf(getArguments().getString(TOP_USER_TYPE));
         }
     }
 
@@ -79,32 +76,27 @@ public class TopUserListFragment extends SwipeRefreshFragment implements TopUser
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final String reqType = userType.toString().toLowerCase();
+        final String reqType = mTopUserType.toString().toLowerCase();
         Log.e("reqTpye=>", reqType);
 
-        presenter = new TopUserListPresenter(this);
-        presenter.create();
-        presenter.loadTopUserData(reqType);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
+        mPresenter = new TopUserListPresenter(this);
+        mPresenter.create();
+        mPresenter.loadTopUserData(reqType);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mPresenter.destroy();
     }
 
 
     @Override
     public void createUserListView(final List<TopUser> users) {
-        userDataList = users;
-        layoutManager = new LinearLayoutManager(getContext());
+        mTopUsers = users;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new Adapter(getContext(), userDataList);
+        Adapter adapter = new Adapter(getContext(), mTopUsers);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -113,8 +105,8 @@ public class TopUserListFragment extends SwipeRefreshFragment implements TopUser
             }
         });
 
-        topUserListView.setLayoutManager(layoutManager);
-        topUserListView.setAdapter(adapter);
+        mTopUserListView.setLayoutManager(layoutManager);
+        mTopUserListView.setAdapter(adapter);
 
     }
 
@@ -162,7 +154,7 @@ public class TopUserListFragment extends SwipeRefreshFragment implements TopUser
             @DrawableRes int drawableLeft = R.drawable.ic_rise_blue_64;
             String textRight = "";
             String value = "";
-            switch (userType) {
+            switch (mTopUserType) {
                 case agreeiw:       // 赞数飙升
                     textRight = "赞";
                     value = topUser.getAgreeiw();

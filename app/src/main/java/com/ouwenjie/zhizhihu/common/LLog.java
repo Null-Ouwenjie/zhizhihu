@@ -19,7 +19,7 @@ public class LLog {
     public static final int LOG_LEVEL_V = 1;
     // info
     public static final int LOG_LEVEL_I = 2;
-    // debug
+    // sDebug
     public static final int LOG_LEVEL_D = 3;
     // warn
     public static final int LOG_LEVEL_W = 4;
@@ -29,13 +29,13 @@ public class LLog {
     /**
      * 是否为调试模式，默认为true，发布前需改成false
      */
-//	private static boolean debug = false;
-//	private static boolean debug = true;
+//	private static boolean sDebug = false;
+//	private static boolean sDebug = true;
 
-    private static boolean debug = AppConfig.isDebug;
+    private static boolean sDebug = AppConfig.isDebug;
 
     public static boolean isDebug() {
-        return debug;
+        return sDebug;
     }
 
     /**
@@ -198,7 +198,7 @@ public class LLog {
      * @param logLevel 日志级别
      */
     public static void log(String tag, Object msgObj, Throwable e, int logLevel) {
-        if (!debug) // 不是调试模式
+        if (!sDebug) // 不是调试模式
             return;
 
         if (null == tag && null == msgObj) // 标签和消息都为空

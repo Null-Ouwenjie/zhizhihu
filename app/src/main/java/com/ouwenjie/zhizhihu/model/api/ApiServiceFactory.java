@@ -8,7 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.ouwenjie.zhizhihu.App;
 import com.ouwenjie.zhizhihu.AppConfig;
 import com.ouwenjie.zhizhihu.common.LLog;
-import com.ouwenjie.zhizhihu.utils.NetworkUtils;
+import com.ouwenjie.zhizhihu.utils.NetworkUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class ApiServiceFactory {
 
     private static ApiService apiService = null;
 
-    static Gson gson = new GsonBuilder()
+    private static Gson gson = new GsonBuilder()
             .setExclusionStrategies(new ExclusionStrategy() {
                 @Override
                 public boolean shouldSkipField(FieldAttributes f) {
@@ -116,12 +116,13 @@ public class ApiServiceFactory {
             return newResponse;
         }
     };
+
     private static final Interceptor HttpInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             Request newRequest;
-            if (!NetworkUtils.isNetworkAvailable(App.getContext())) {
+            if (!NetworkUtil.isNetworkAvailable(App.getContext())) {
                 newRequest = request.newBuilder()
                         .cacheControl(CacheControl.FORCE_CACHE)
                         .build();
@@ -130,8 +131,10 @@ public class ApiServiceFactory {
                 newRequest = request.newBuilder()
                         .build();
             }
+
             Response originalResponse = chain.proceed(newRequest);
-            if (NetworkUtils.isNetworkAvailable(App.getContext())) {
+
+            if (NetworkUtil.isNetworkAvailable(App.getContext())) {
                 //有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置
                 String cacheControl = request.cacheControl().toString();
                 return originalResponse.newBuilder()

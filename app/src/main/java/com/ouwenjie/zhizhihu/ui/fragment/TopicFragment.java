@@ -38,13 +38,9 @@ public class TopicFragment extends Fragment {
     public static final String KEY_TAB_TXT = "topic_tab_txt";
 
     @Bind(R.id.topic_list)
-    RecyclerView topicList;
+    RecyclerView mTopicList;
 
-    private LinearLayoutManager layoutManager;
-    private Adapter adapter;
-
-    String tabTxt;
-    List<Topic> topics;
+    private List<Topic> mTopics;
 
     public TopicFragment() {
         // Required empty public constructor
@@ -68,7 +64,7 @@ public class TopicFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            tabTxt = getArguments().getString(KEY_TAB_TXT);
+            String tabTxt = getArguments().getString(KEY_TAB_TXT);
 
             try {
                 InputStreamReader inputStreamReader = new InputStreamReader(
@@ -88,7 +84,7 @@ public class TopicFragment extends Fragment {
                 }.getType());
                 for (TabData tabData : tabDatas) {
                     if (tabData.getTabTxt().equals(tabTxt)) {
-                        topics = tabData.getTopics();
+                        mTopics = tabData.getTopics();
                         break;
                     }
                 }
@@ -111,22 +107,22 @@ public class TopicFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (topics == null) {
+        if (mTopics == null) {
             return;
         }
-        layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new Adapter(getContext(), topics);
+        Adapter adapter = new Adapter(getContext(), mTopics);
         adapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getContext(), WebBrowserActivity.class);
-                intent.putExtra("url", topics.get(position).getTargetUrl());
+                intent.putExtra("url", mTopics.get(position).getTargetUrl());
                 startActivity(intent);
             }
         });
-        topicList.setLayoutManager(layoutManager);
-        topicList.setAdapter(adapter);
+        mTopicList.setLayoutManager(layoutManager);
+        mTopicList.setAdapter(adapter);
 
     }
 

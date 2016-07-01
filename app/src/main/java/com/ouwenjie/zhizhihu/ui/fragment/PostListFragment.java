@@ -1,6 +1,5 @@
 package com.ouwenjie.zhizhihu.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -29,17 +28,13 @@ import butterknife.ButterKnife;
  */
 public class PostListFragment extends SwipeRefreshFragment implements PostListViewInterface {
 
-    Activity activity;
-
     @Bind(R.id.posts_list)
-    RecyclerView recyclerView;
+    RecyclerView mPostListView;
 
-    private LinearLayoutManager linearLayoutManager;
-    private PostListAdapter postListAdapter;
-
+    private PostListAdapter mPostListAdapter;
     private boolean mIsFirstTimeTouchBottom = true;
 
-    PostListPresenter postListPresenter;
+    private PostListPresenter mPresenter;
 
     public PostListFragment() {
     }
@@ -57,12 +52,6 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,13 +63,15 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        postListPresenter = new PostListPresenter(this);
+        mPresenter = new PostListPresenter(this);
+        mPresenter.create();
+
         initView();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                postListPresenter.initData();
+                mPresenter.initData();
             }
         }, 399);
     }
@@ -88,27 +79,27 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
+        mPresenter.destroy();
     }
 
 
     private void initView() {
-        linearLayoutManager = new LinearLayoutManager(this.getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnScrollListener(getScrollToBottomListener(linearLayoutManager));
+        mPostListView.setLayoutManager(linearLayoutManager);
+        mPostListView.addOnScrollListener(getScrollToBottomListener(linearLayoutManager));
     }
 
     @Override
     public void initList(final List<Post> postList) {
-        postListAdapter = new PostListAdapter(this, postList);
-        postListAdapter.setOnItemClickListener(new PostListAdapter.OnItemClickListener() {
+        mPostListAdapter = new PostListAdapter(this, postList);
+        mPostListAdapter.setOnItemClickListener(new PostListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                PostAnswersActivity.startActivity(activity, postList.get(position));
+                PostAnswersActivity.startActivity(getContext(), postList.get(position));
             }
         });
-        recyclerView.setAdapter(postListAdapter);
+        mPostListView.setAdapter(mPostListAdapter);
     }
 
     /**
@@ -116,8 +107,8 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
      */
     @Override
     public void refreshList() {
-        if (postListAdapter != null) {
-            postListAdapter.notifyDataSetChanged();
+        if (mPostListAdapter != null) {
+            mPostListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -134,7 +125,7 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
     @Override
     public void onRefreshing() {
         // 界面有数据, 而且此刻没有正在加载下一页, 这个下拉就自己关掉吧
-        if (postListPresenter.hasData() && !postListPresenter.isLoadingNextPage()) {
+        if (mPresenter.hasData() && !mPresenter.isLoadingNextPage()) {
             super.onRefreshing();
         }
     }
@@ -144,12 +135,12 @@ public class PostListFragment extends SwipeRefreshFragment implements PostListVi
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int lastItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                int count = postListAdapter.getItemCount() - 1;
+                int count = mPostListAdapter.getItemCount() - 1;
                 boolean isBottom = (lastItem == count);
                 if (!mSwipeRefreshLayout.isRefreshing() && isBottom) {
                     if (!mIsFirstTimeTouchBottom) {
                         Log.e("onScrolled=>", "refresh.... ");
-                        postListPresenter.loadNextPage();
+                        mPresenter.loadNextPage();
                     } else {
                         mIsFirstTimeTouchBottom = false;
                     }

@@ -15,7 +15,7 @@ import com.ouwenjie.zhizhihu.model.entity.Post;
 import com.ouwenjie.zhizhihu.model.mImp.ApiImp;
 import com.ouwenjie.zhizhihu.model.mInterface.ApiInterface;
 import com.ouwenjie.zhizhihu.ui.activity.base.BaseActivity;
-import com.ouwenjie.zhizhihu.utils.TimeUtils;
+import com.ouwenjie.zhizhihu.utils.TimeUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -28,9 +28,8 @@ public class RandomLookActivity extends BaseActivity {
 
     private static final long daySec = 60 * 60 * 24;
 
-    private long targetTimestamp;
-
-    private boolean hasLoadData = false;
+    private long mTargetTimestamp;
+    private boolean mHasLoadData = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +39,15 @@ public class RandomLookActivity extends BaseActivity {
         int randomDay = new Random().nextInt(30);
         long daySecs = daySec * randomDay;
 
-        long curSec = TimeUtils.getCurrentUnixTimeStamp();
-        targetTimestamp = curSec - daySecs;
-        LLog.e("RandomLook ", "targetTimestamp=" + targetTimestamp);
+        long curSec = TimeUtil.getCurrentUnixTimeStamp();
+        mTargetTimestamp = curSec - daySecs;
+        LLog.e("RandomLook ", "mTargetTimestamp=" + mTargetTimestamp);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!hasLoadData) {
+        if (!mHasLoadData) {
             loadRandom();
         } else {
             finish();
@@ -58,7 +57,7 @@ public class RandomLookActivity extends BaseActivity {
     private void loadRandom() {
         final ApiInterface apiInterface = new ApiImp();
         // 使用一个随机的时间戳去请求 posts
-        apiInterface.getPosts(targetTimestamp + "")
+        apiInterface.getPosts(mTargetTimestamp + "")
                 .flatMap(new Func1<List<Post>, Observable<List<Answer>>>() {
                     @Override
                     public Observable<List<Answer>> call(List<Post> posts) {
@@ -111,7 +110,7 @@ public class RandomLookActivity extends BaseActivity {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                             startActivity(intent);
                         }
-                        hasLoadData = true;
+                        mHasLoadData = true;
                     }
                 });
 

@@ -23,21 +23,21 @@ import io.realm.Realm;
 public class MyFavoriteActivity extends SwipeBackActivity {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.progress)
-    ProgressBar progress;
+    ProgressBar mProgressBar;
     @Bind(R.id.my_favorite_answer_list_view)
-    RecyclerView myFavoriteAnswerListView;
+    RecyclerView mMyFavoriteAnswerListView;
 
     private Realm mRealm;
-    private PostAnswerAdapter postAnswerAdapter;
+    private PostAnswerAdapter mPostAnswerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_favorite);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("我的收藏");
@@ -46,8 +46,8 @@ public class MyFavoriteActivity extends SwipeBackActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        myFavoriteAnswerListView.setLayoutManager(linearLayoutManager);
-        myFavoriteAnswerListView.hasFixedSize();
+        mMyFavoriteAnswerListView.setLayoutManager(linearLayoutManager);
+        mMyFavoriteAnswerListView.hasFixedSize();
 
     }
 
@@ -61,10 +61,10 @@ public class MyFavoriteActivity extends SwipeBackActivity {
 
 
     public void initList(final List<Answer> answers) {
-        postAnswerAdapter = new PostAnswerAdapter(this, answers);
-        postAnswerAdapter.setOnItemClickListener(getOnItemClickListener(answers));
-        myFavoriteAnswerListView.setAdapter(postAnswerAdapter);
-        progress.setVisibility(View.GONE);
+        mPostAnswerAdapter = new PostAnswerAdapter(this, answers);
+        mPostAnswerAdapter.setOnItemClickListener(getOnItemClickListener(answers));
+        mMyFavoriteAnswerListView.setAdapter(mPostAnswerAdapter);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     private PostAnswerAdapter.OnItemClickListener getOnItemClickListener(final List<Answer> answers) {
@@ -103,14 +103,14 @@ public class MyFavoriteActivity extends SwipeBackActivity {
                     mRealm.beginTransaction();
                     favoriteAnswer.removeFromRealm();
                     mRealm.commitTransaction();
-                    postAnswerAdapter.notifyDataSetChanged();
+                    mPostAnswerAdapter.notifyDataSetChanged();
                     toast("取消收藏");
                 } else {
                     // save
                     mRealm.beginTransaction();
                     mRealm.copyToRealm(answer);
                     mRealm.commitTransaction();
-                    postAnswerAdapter.notifyDataSetChanged();
+                    mPostAnswerAdapter.notifyDataSetChanged();
                     toast("已收藏");
                 }
             }

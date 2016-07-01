@@ -18,13 +18,13 @@ import butterknife.ButterKnife;
 public class HomeActivity extends BaseActivity {
 
     @Bind(R.id.container)
-    FrameLayout container;
+    FrameLayout mContainer;
 
     private BottomBar mBottomBar;
 
-    private PostFragment postFragment;
-    private TopUserFragment topUserFragment;
-    private UserCenterFragment userCenterFragment;
+    private PostFragment mPostFragment;
+    private TopUserFragment mTopUserFragment;
+    private UserCenterFragment mUserCenterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +32,12 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        postFragment = PostFragment.newInstance();
-        topUserFragment = TopUserFragment.newInstance();
-        userCenterFragment = UserCenterFragment.newInstance(null);
+        mPostFragment = PostFragment.newInstance();
+        mTopUserFragment = TopUserFragment.newInstance();
+        mUserCenterFragment = UserCenterFragment.newInstance(null);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, postFragment).commit();
+                .replace(R.id.container, mPostFragment).commit();
 
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItemsFromMenu(R.menu.menu_home, new OnMenuTabClickListener() {
@@ -46,13 +46,13 @@ public class HomeActivity extends BaseActivity {
                 // The user selected item number one.
                 if (menuItemId == R.id.posts) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, postFragment).commit();
+                            .replace(R.id.container, mPostFragment).commit();
                 } else if (menuItemId == R.id.bigv) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, topUserFragment).commit();
+                            .replace(R.id.container, mTopUserFragment).commit();
                 } else if (menuItemId == R.id.me) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, userCenterFragment).commit();
+                            .replace(R.id.container, mUserCenterFragment).commit();
                 }
             }
 

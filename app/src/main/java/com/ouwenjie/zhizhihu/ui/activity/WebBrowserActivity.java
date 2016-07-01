@@ -30,14 +30,14 @@ import butterknife.ButterKnife;
 
 public class WebBrowserActivity extends SwipeBackActivity {
 
-    public static final String URL = "url";
+    public static final String URL = "mUrl";
 
     @Bind(R.id.web_view)
-    WebView webView;
+    WebView mWebView;
     @Bind(R.id.progress_bar)
-    ProgressBar progressBar;
+    ProgressBar mProgressBar;
 
-    private String url;
+    private String mUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +45,19 @@ public class WebBrowserActivity extends SwipeBackActivity {
         setContentView(R.layout.activity_web_browser);
         ButterKnife.bind(this);
 
-        url = getIntent().getStringExtra(URL);
-        webView.getSettings().setJavaScriptEnabled(true);// 设置可以加载JavaScript的页面
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setSupportMultipleWindows(true);
-        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.getSettings()
+        mUrl = getIntent().getStringExtra(URL);
+        mWebView.getSettings().setJavaScriptEnabled(true);// 设置可以加载JavaScript的页面
+        mWebView.getSettings().setSupportZoom(true);
+        mWebView.getSettings().setSupportMultipleWindows(true);
+        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        mWebView.getSettings()
                 .setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webView.getSettings().setDefaultTextEncodingName("UTF-8");
-        webView.setVerticalScrollBarEnabled(true);
-        webView.setScrollbarFadingEnabled(false);
-        webView.setVerticalFadingEdgeEnabled(false);
-        webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        webView.setWebViewClient(new WebViewClient() {
+        mWebView.getSettings().setDefaultTextEncodingName("UTF-8");
+        mWebView.setVerticalScrollBarEnabled(true);
+        mWebView.setScrollbarFadingEnabled(false);
+        mWebView.setVerticalFadingEdgeEnabled(false);
+        mWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mWebView.setWebViewClient(new WebViewClient() {
             // 这个函数我们可以做很多操作，比如我们读取到某些特殊的URL，于是就可以不打开地址，取消这个操作，
             // 进行预先定义的其他操作，这对一个程序是非常必要的。
             @Override
@@ -81,35 +81,35 @@ public class WebBrowserActivity extends SwipeBackActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                progressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
             }
 
             // 同样道理，我们知道一个页面载入完成，于是我们可以关闭loading条，切换程序动作
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (progressBar.getVisibility() != View.GONE) {
-                    progressBar.setVisibility(View.GONE);
+                if (mProgressBar.getVisibility() != View.GONE) {
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }
         });
-        webView.setWebChromeClient(new WebChromeClient() {
+        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
             }
         });
         if (17 <= Build.VERSION.SDK_INT) {
-            webView.removeJavascriptInterface("searchBoxJavaBridge_");
+            mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
         }
-        Logger.d(url);
-        webView.loadUrl(url);
-//        webView.loadUrl("https://www.zhihu.com/topic/19550564/top-answers");
+        Logger.d(mUrl);
+        mWebView.loadUrl(mUrl);
+//        mWebView.loadUrl("https://www.zhihu.com/topic/19550564/top-answers");
     }
 
     public boolean onKeyDown(int keyCoder, KeyEvent event) {
-        if (webView.canGoBack() && keyCoder == KeyEvent.KEYCODE_BACK) {
-            webView.goBack();   //goBack()表示返回webView的上一页面
+        if (mWebView.canGoBack() && keyCoder == KeyEvent.KEYCODE_BACK) {
+            mWebView.goBack();   //goBack()表示返回webView的上一页面
             return true;
         }
         return super.onKeyDown(keyCoder, event);
@@ -119,7 +119,7 @@ public class WebBrowserActivity extends SwipeBackActivity {
         boolean hasZhiHuClient = isAvilible(WebBrowserActivity.this, ZhiHu.PACKAGE_NAME);
         if (hasZhiHuClient) {
             Log.e("onItemClick=>", "hasZhiHuClient");
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
             intent.setPackage(ZhiHu.PACKAGE_NAME);
             startActivity(intent);
         } else {

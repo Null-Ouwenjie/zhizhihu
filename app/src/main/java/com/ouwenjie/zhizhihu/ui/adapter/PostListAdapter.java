@@ -25,18 +25,18 @@ import butterknife.ButterKnife;
  */
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
 
-    List<Post> postList;
-    Context context;
-    OnItemClickListener onItemClickListener;
+    private List<Post> mPostList;
+    private Context mContext;
+    private OnItemClickListener mOnItemClickListener;
 
     public PostListAdapter(Activity activity, List<Post> postList) {
-        this.context = activity;
-        this.postList = postList;
+        this.mContext = activity;
+        this.mPostList = postList;
     }
 
     public PostListAdapter(Fragment fragment, List<Post> postList) {
-        this.context = fragment.getContext();
-        this.postList = postList;
+        this.mContext = fragment.getContext();
+        this.mPostList = postList;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, (Integer) v.getTag());
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(v, (Integer) v.getTag());
                 }
             }
         });
@@ -56,7 +56,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Post post = postList.get(position);
+        Post post = mPostList.get(position);
         String date = post.getDate();
         String name = post.getName();
         String picUrl = post.getPic();
@@ -64,7 +64,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         int count = post.getCount();
         String excerpt = post.getExcerpt();
 
-        Glide.with(context)
+        Glide.with(mContext)
                 .load(picUrl)
                 .into(holder.postPicImg);
 
@@ -90,7 +90,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return mPostList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -111,7 +111,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {

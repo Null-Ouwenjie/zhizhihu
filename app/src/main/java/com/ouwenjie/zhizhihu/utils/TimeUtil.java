@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * 时间工具类
  */
-public class TimeUtils {
+public class TimeUtil {
 
     public static final SimpleDateFormat DEFAULT_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 

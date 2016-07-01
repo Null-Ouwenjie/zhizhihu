@@ -54,7 +54,6 @@ public class ApiImp implements ApiInterface {
 
     @Override
     public Observable<List<Answer>> getAnswers(final String date, final String name) {
-
         return ApiServiceFactory.getApiService().getPostAnswers(date, name)
                 .map(new Func1<AnswerModel, List<Answer>>() {
                     @Override

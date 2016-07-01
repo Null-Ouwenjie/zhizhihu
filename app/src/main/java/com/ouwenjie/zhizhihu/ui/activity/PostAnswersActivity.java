@@ -35,22 +35,22 @@ import io.realm.Realm;
 public class PostAnswersActivity extends SwipeBackActivity implements PostAnswerViewInterface {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
+    RecyclerView mAnswerListView;
     @Bind(R.id.progress)
-    ProgressBar progress;
+    ProgressBar mProgressBar;
 
-    private static Post post;
+    private static Post sPost;
 
-    private PostAnswerPresenter presenter;
+    private PostAnswerPresenter mPresenter;
 
     private Realm mRealm;
-    private PostAnswerAdapter postAnswerAdapter;
+    private PostAnswerAdapter mPostAnswerAdapter;
 
-    public static void startActivity(Activity activity, Post p) {
-        post = p;
-        activity.startActivity(new Intent(activity, PostAnswersActivity.class));
+    public static void startActivity(Context context, Post p) {
+        sPost = p;
+        context.startActivity(new Intent(context, PostAnswersActivity.class));
     }
 
     @Override
@@ -62,31 +62,38 @@ public class PostAnswersActivity extends SwipeBackActivity implements PostAnswer
 
         initWidget();
 
-        presenter = new PostAnswerPresenter(this);
-        presenter.initData(post.getDate().replace("-", ""), post.getName());
-        progress.setVisibility(View.VISIBLE);
+        mPresenter = new PostAnswerPresenter(this);
+        mPresenter.create();
+        mPresenter.initData(sPost.getDate().replace("-", ""), sPost.getName());
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
     }
 
     private void initWidget() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
         String title = null;
-        switch (post.getName()) {
+        switch (sPost.getName()) {
             case "archive":
-                title = post.getDate() + " " + "历史精华";
+                title = sPost.getDate() + " " + "历史精华";
                 break;
             case "recent":
-                title = post.getDate() + " " + "近日热门";
+                title = sPost.getDate() + " " + "近日热门";
                 break;
             case "yesterday":
-                title = post.getDate() + " " + "昨日更新";
+                title = sPost.getDate() + " " + "昨日更新";
                 break;
             default:
                 break;
@@ -94,16 +101,16 @@ public class PostAnswersActivity extends SwipeBackActivity implements PostAnswer
         setTitle(title);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.hasFixedSize();
+        mAnswerListView.setLayoutManager(linearLayoutManager);
+        mAnswerListView.hasFixedSize();
     }
 
     @Override
     public void initList(final List<Answer> answers) {
-        postAnswerAdapter = new PostAnswerAdapter(this, answers);
-        postAnswerAdapter.setOnItemClickListener(getOnItemClickListener(answers));
-        recyclerView.setAdapter(postAnswerAdapter);
-        progress.setVisibility(View.GONE);
+        mPostAnswerAdapter = new PostAnswerAdapter(this, answers);
+        mPostAnswerAdapter.setOnItemClickListener(getOnItemClickListener(answers));
+        mAnswerListView.setAdapter(mPostAnswerAdapter);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     private PostAnswerAdapter.OnItemClickListener getOnItemClickListener(final List<Answer> answers) {
@@ -150,14 +157,14 @@ public class PostAnswersActivity extends SwipeBackActivity implements PostAnswer
                     mRealm.beginTransaction();
                     favoriteAnswer.removeFromRealm();
                     mRealm.commitTransaction();
-                    postAnswerAdapter.notifyDataSetChanged();
+                    mPostAnswerAdapter.notifyDataSetChanged();
                     toast("取消收藏");
                 } else {
                     // save
                     mRealm.beginTransaction();
                     mRealm.copyToRealm(answer);
                     mRealm.commitTransaction();
-                    postAnswerAdapter.notifyDataSetChanged();
+                    mPostAnswerAdapter.notifyDataSetChanged();
                     toast("已收藏");
                 }
             }

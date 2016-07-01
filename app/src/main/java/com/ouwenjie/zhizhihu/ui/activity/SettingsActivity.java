@@ -15,27 +15,27 @@ import android.widget.LinearLayout;
 
 import com.ouwenjie.zhizhihu.R;
 import com.ouwenjie.zhizhihu.common.LLog;
-import com.ouwenjie.zhizhihu.utils.DataCleanManager;
+import com.ouwenjie.zhizhihu.utils.DataCleanUtil;
 
 /**
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
 
-    private Preference clearCache;
+    private Preference mClearCache;
     public static final String PREF_KEY_CLEAR_CACHE = "pref_clear_cache";
 
-    private ListPreference openType;
+    private ListPreference mOpenType;
     public static final String PREF_KEY_OPEN_TYPE = "pref_open_type";
 
-    private ProgressDialog progressDialog;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = getSharedPreferences("com.ouwenjie.kzhihu_preferences", MODE_PRIVATE);
+        mPreferences = getSharedPreferences("com.ouwenjie.kzhihu_preferences", MODE_PRIVATE);
 
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
         Toolbar toolbar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.toolbar_settings, root, false);
@@ -52,15 +52,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
         );
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
 
 
         //Load the preference from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
-        clearCache = findPreference(PREF_KEY_CLEAR_CACHE);
-        clearCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        mClearCache = findPreference(PREF_KEY_CLEAR_CACHE);
+        mClearCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 LLog.e("onPreferenceClick " + preference.getTitle());
@@ -69,10 +69,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
         });
 
-        openType = (ListPreference) findPreference(PREF_KEY_OPEN_TYPE);
+        mOpenType = (ListPreference) findPreference(PREF_KEY_OPEN_TYPE);
         /* 是显示默认值*/
-        openType.setSummary(openType.getEntry());
-        openType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mOpenType.setSummary(mOpenType.getEntry());
+        mOpenType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 LLog.e("OPEN TYPE = ", newValue + "");
@@ -94,7 +94,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
 
     public void cleanCache() {
-        progressDialog.setTitle("清理缓存...");
+        mProgressDialog.setTitle("清理缓存...");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("清理缓存")
@@ -103,12 +103,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     @Override
                     public void onClick(DialogInterface d, int which) {
                         // clear cache
-                        progressDialog.show();
+                        mProgressDialog.show();
 
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                DataCleanManager.clearAllCache(getApplicationContext());
+                                DataCleanUtil.clearAllCache(getApplicationContext());
                                 try {
                                     Thread.sleep(1000); // 再转1秒，免得消失得太快
                                 } catch (InterruptedException e) {
@@ -133,7 +133,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressDialog.dismiss();
+                mProgressDialog.dismiss();
 
             }
         });

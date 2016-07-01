@@ -25,9 +25,9 @@ public class LoadingActivity extends BaseActivity {
     private Handler mHandler = new WeakHandler(this);
 
     @Bind(R.id.loading_img)
-    ImageView loadingImg;
+    ImageView mLoadingImg;
     @Bind(R.id.logo_img)
-    ImageView logoImg;
+    ImageView mLogoImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class LoadingActivity extends BaseActivity {
         mHandler.removeMessages(MSG_PASS);
         mHandler.sendEmptyMessageDelayed(MSG_PASS, MIN_WAITTING_MSEC * 3);
         Animation alpha = AnimationUtils.loadAnimation(this, R.anim.alpha_0_1);
-        logoImg.startAnimation(alpha);
+        mLogoImg.startAnimation(alpha);
     }
 
     /**

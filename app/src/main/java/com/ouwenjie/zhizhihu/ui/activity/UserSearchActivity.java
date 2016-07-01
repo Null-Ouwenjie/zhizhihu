@@ -22,10 +22,10 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ouwenjie.zhizhihu.R;
 import com.ouwenjie.zhizhihu.common.Constant;
 import com.ouwenjie.zhizhihu.common.LLog;
-import com.ouwenjie.zhizhihu.model.PreferencesUtil;
 import com.ouwenjie.zhizhihu.model.entity.SearchUser;
 import com.ouwenjie.zhizhihu.model.mImp.ApiImp;
 import com.ouwenjie.zhizhihu.ui.activity.base.SwipeBackActivity;
+import com.ouwenjie.zhizhihu.utils.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +38,16 @@ import rx.Subscriber;
 public class UserSearchActivity extends SwipeBackActivity {
 
     @Bind(R.id.toolbar_container)
-    FrameLayout toolbarContainer;
+    FrameLayout mToolbarContainer;
     @Bind(R.id.search_user_list_view)
-    RecyclerView searchUserListView;
+    RecyclerView mSearchUserListView;
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.search_view)
-    MaterialSearchView searchView;
+    MaterialSearchView mSearchView;
 
-    private List<SearchUser> searchUsers;
-    private Adapter adapter;
+    private List<SearchUser> mSearchUsers;
+    private Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +61,13 @@ public class UserSearchActivity extends SwipeBackActivity {
 
     private void initView() {
         setTitle("");
-        setSupportActionBar(toolbar);
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+        setSupportActionBar(mToolbar);
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 LLog.e("onQueryTextSubmit = " + query);
-                searchUsers.clear();
-                adapter.notifyDataSetChanged();
+                mSearchUsers.clear();
+                mAdapter.notifyDataSetChanged();
                 search(query);
                 return false;
             }
@@ -79,7 +79,7 @@ public class UserSearchActivity extends SwipeBackActivity {
             }
         });
 
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
                 LLog.e("onSearchViewShown");
@@ -93,20 +93,20 @@ public class UserSearchActivity extends SwipeBackActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        searchUsers = new ArrayList<>();
-        adapter = new Adapter(getApplicationContext(), searchUsers);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
+        mSearchUsers = new ArrayList<>();
+        mAdapter = new Adapter(getApplicationContext(), mSearchUsers);
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SearchUser user = searchUsers.get(position);
+                SearchUser user = mSearchUsers.get(position);
                 String userString = new Gson().toJson(user);
                 PreferencesUtil.putString(getApplicationContext(), Constant.KEY_BIND_USER, userString);
 
                 finish();
             }
         });
-        searchUserListView.setLayoutManager(linearLayoutManager);
-        searchUserListView.setAdapter(adapter);
+        mSearchUserListView.setLayoutManager(linearLayoutManager);
+        mSearchUserListView.setAdapter(mAdapter);
     }
 
     public void search(String name) {
@@ -129,8 +129,8 @@ public class UserSearchActivity extends SwipeBackActivity {
 
                     @Override
                     public void onNext(List<SearchUser> users) {
-                        searchUsers.addAll(users);
-                        adapter.notifyDataSetChanged();
+                        mSearchUsers.addAll(users);
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -141,7 +141,7 @@ public class UserSearchActivity extends SwipeBackActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                searchView.showSearch();
+                mSearchView.showSearch();
             }
         }, 400);
     }
@@ -150,7 +150,7 @@ public class UserSearchActivity extends SwipeBackActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
         MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
+        mSearchView.setMenuItem(item);
         return true;
     }
 

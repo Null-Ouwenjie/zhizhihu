@@ -14,9 +14,9 @@ import butterknife.ButterKnife;
 public class AboutUsActivity extends SwipeBackActivity {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.version_name_txt)
-    TextView versionNameTxt;
+    TextView mVersionNameTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +28,11 @@ public class AboutUsActivity extends SwipeBackActivity {
     }
 
     private void initTitleBar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         setTitle("关于我们");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(
+        mToolbar.setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

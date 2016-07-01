@@ -21,7 +21,7 @@ import com.orhanobut.logger.Logger;
 import com.ouwenjie.zhizhihu.R;
 import com.ouwenjie.zhizhihu.common.ModelErrorException;
 import com.ouwenjie.zhizhihu.ui.viewInterface.MVPView;
-import com.ouwenjie.zhizhihu.utils.NetworkUtils;
+import com.ouwenjie.zhizhihu.utils.NetworkUtil;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -31,15 +31,15 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class MVPPresenter<T extends MVPView> {
 
-    protected T viewInterface;
-    protected Context context;
+    protected T mViewInterface;
+    protected Context mContext;
 
-    protected CompositeSubscription compositeSubscription;
+    protected CompositeSubscription mCompositeSubscription;
 
     public MVPPresenter(T viewInterface) {
-        this.viewInterface = viewInterface;
-        context = viewInterface.getContext();
-        compositeSubscription = new CompositeSubscription();
+        this.mViewInterface = viewInterface;
+        mContext = viewInterface.getContext();
+        mCompositeSubscription = new CompositeSubscription();
     }
 
     /**
@@ -54,21 +54,21 @@ public abstract class MVPPresenter<T extends MVPView> {
     public abstract void destroy();
 
     public T getAttachedView() {
-        return viewInterface;
+        return mViewInterface;
     }
 
     protected void doRxError(Throwable e) {
         Logger.t("doRxError=> ").e(e.getMessage());
         if (e instanceof ModelErrorException) {
             // 网络请求成功，但 code != 1，则显示后台的 message
-            viewInterface.toast(e.getMessage());
+            mViewInterface.toast(e.getMessage());
         } else {
             // 网络错误
-            if (!NetworkUtils.isNetworkAvailable(context)) {
-                viewInterface.toast(viewInterface.getContext().getString(R.string.label_network_not_available));
+            if (!NetworkUtil.isNetworkAvailable(mContext)) {
+                mViewInterface.toast(mViewInterface.getContext().getString(R.string.label_network_not_available));
             } else {
                 // 其它错误
-                viewInterface.toast(viewInterface.getContext().getString(R.string.label_operation_failed));
+                mViewInterface.toast(mViewInterface.getContext().getString(R.string.label_operation_failed));
             }
         }
     }

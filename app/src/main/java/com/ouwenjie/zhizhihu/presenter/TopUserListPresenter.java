@@ -8,23 +8,23 @@ import com.ouwenjie.zhizhihu.ui.viewInterface.TopUserListViewInterface;
 import java.util.List;
 
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by Jack on 2016/3/23.
  */
 public class TopUserListPresenter extends MVPPresenter<TopUserListViewInterface> {
 
-    private int page = 1;
-    private static final int pageCount = 20;
+    private int mPage = 1;
+    private static final int sPageCount = 20;
 
-    ApiInterface apiInterface;
-    String topType;
-    List<TopUser> topUsers;
-
+    private ApiInterface mApiInterface;
+    private String mTopType;
+    private List<TopUser> mTopUsers;
 
     public TopUserListPresenter(TopUserListViewInterface viewInterface) {
         super(viewInterface);
-        apiInterface = new ApiImp();
+        mApiInterface = new ApiImp();
     }
 
     @Override
@@ -34,13 +34,13 @@ public class TopUserListPresenter extends MVPPresenter<TopUserListViewInterface>
 
     @Override
     public void destroy() {
-
+        mCompositeSubscription.clear();
     }
 
 
     public void loadTopUserData(String topType) {
-        this.topType = topType;
-        apiInterface.getTopUser(topType, page, pageCount)
+        mTopType = topType;
+        Subscription sub = mApiInterface.getTopUser(topType, mPage, sPageCount)
                 .subscribe(new Subscriber<List<TopUser>>() {
                     @Override
                     public void onCompleted() {
@@ -49,15 +49,16 @@ public class TopUserListPresenter extends MVPPresenter<TopUserListViewInterface>
 
                     @Override
                     public void onError(Throwable e) {
-
+                        doRxError(e);
                     }
 
                     @Override
                     public void onNext(List<TopUser> topUsers) {
-                        viewInterface.createUserListView(topUsers);
+                        mTopUsers = topUsers;
+                        mViewInterface.createUserListView(mTopUsers);
                     }
                 });
-
+        mCompositeSubscription.add(sub);
     }
 
 }

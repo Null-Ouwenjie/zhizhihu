@@ -9,19 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by 文杰 on 2015/10/27.
  */
 public class PostAnswerPresenter extends MVPPresenter<PostAnswerViewInterface> {
 
-    ApiInterface apiInterface;
+    private ApiInterface mApiInterface;
 
-    List<Answer> answers = new ArrayList<>();
+    private List<Answer> mAnswers = new ArrayList<>();
 
     public PostAnswerPresenter(PostAnswerViewInterface postAnswerViewInterface) {
         super(postAnswerViewInterface);
-        apiInterface = new ApiImp();
+        mApiInterface = new ApiImp();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class PostAnswerPresenter extends MVPPresenter<PostAnswerViewInterface> {
 
     @Override
     public void destroy() {
-
+        mCompositeSubscription.clear();
     }
 
     /**
@@ -41,7 +42,7 @@ public class PostAnswerPresenter extends MVPPresenter<PostAnswerViewInterface> {
      * @param name
      */
     public void initData(String date, String name) {
-        apiInterface.getAnswers(date, name)
+        Subscription sub = mApiInterface.getAnswers(date, name)
                 .subscribe(new Subscriber<List<Answer>>() {
                     @Override
                     public void onCompleted() {
@@ -50,15 +51,16 @@ public class PostAnswerPresenter extends MVPPresenter<PostAnswerViewInterface> {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        doRxError(e);
                     }
 
                     @Override
                     public void onNext(List<Answer> list) {
-                        answers = list;
-                        viewInterface.initList(answers);
+                        mAnswers = list;
+                        mViewInterface.initList(mAnswers);
                     }
                 });
+        mCompositeSubscription.add(sub);
     }
 
 }

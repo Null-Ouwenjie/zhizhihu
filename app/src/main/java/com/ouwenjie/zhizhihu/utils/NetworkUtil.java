@@ -17,7 +17,7 @@ import java.util.Enumeration;
  * @author Sam Sun
  * @version $Revision:1.0.0, $Date: 2012-2-15 下午3:54:17
  */
-public class NetworkUtils {
+public class NetworkUtil {
 
     /**
      * 网络类型常量（支持到Android4.0）
@@ -175,10 +175,10 @@ public class NetworkUtils {
         String online;
         TelephonyManager tm;
         tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
-        if (NetworkUtils.isWifi(cxt)) {// 是WIFI
+        if (NetworkUtil.isWifi(cxt)) {// 是WIFI
             online = "wifi";
         } else { // 非WIFI
-            online = NetworkUtils.getOnline(tm.getNetworkType()); // 根据NetworkType获取名称
+            online = NetworkUtil.getOnline(tm.getNetworkType()); // 根据NetworkType获取名称
         }
         return online;
     }

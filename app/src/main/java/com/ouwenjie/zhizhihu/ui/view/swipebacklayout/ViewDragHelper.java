@@ -414,7 +414,7 @@ public class ViewDragHelper {
     /**
      * Sets the sensitivity of the dragger.
      *
-     * @param context     The application context.
+     * @param context     The application mContext.
      * @param sensitivity value between 0 and 1, the final value for touchSlop =
      *                    ViewConfiguration.getScaledTouchSlop * (1 / s);
      */

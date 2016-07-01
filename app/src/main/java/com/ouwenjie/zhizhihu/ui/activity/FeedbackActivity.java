@@ -30,19 +30,19 @@ import butterknife.OnClick;
 public class FeedbackActivity extends SwipeBackActivity {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.feedback_type_txt)
-    TextView feedbackTypeTxt;
+    TextView mFeedbackTypeTxt;
     @Bind(R.id.feedback_content_edit)
-    EditText feedbackContentEdit;
+    EditText mFeedbackContentEdit;
     @Bind(R.id.feedback_content_layout)
-    FrameLayout feedbackContentLayout;
+    FrameLayout mFeedbackContentLayout;
     @Bind(R.id.contact_txt)
-    EditText contactTxt;
+    EditText mContactTxt;
     @Bind(R.id.commit_btn)
-    Button commitBtn;
+    Button mCommitBtn;
     @Bind(R.id.feedback_type_item)
-    LinearLayout feedbackTypeItem;
+    LinearLayout mFeedbackTypeItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class FeedbackActivity extends SwipeBackActivity {
         ButterKnife.bind(this);
         initTitleBar();
 
-        feedbackTypeTxt.setText("产品意见");
+        mFeedbackTypeTxt.setText("产品意见");
     }
 
     @Override
@@ -61,11 +61,11 @@ public class FeedbackActivity extends SwipeBackActivity {
     }
 
     private void initTitleBar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         setTitle("意见反馈");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(
+        mToolbar.setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -78,9 +78,9 @@ public class FeedbackActivity extends SwipeBackActivity {
 
     @OnClick(R.id.commit_btn)
     public void commitAdvice() {
-        String key = feedbackTypeTxt.getText().toString();
-        String content = feedbackContentEdit.getText().toString();
-        String contact = contactTxt.getText().toString();
+        String key = mFeedbackTypeTxt.getText().toString();
+        String content = mFeedbackContentEdit.getText().toString();
+        String contact = mContactTxt.getText().toString();
         // // TODO: 2016/4/10 0010 commit
     }
 
@@ -108,7 +108,7 @@ public class FeedbackActivity extends SwipeBackActivity {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        feedbackTypeTxt.setText(type[0]);
+                        mFeedbackTypeTxt.setText(type[0]);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -131,7 +131,7 @@ public class FeedbackActivity extends SwipeBackActivity {
             rbList.add(rb);
             radioGroup.addView(rb);
         }
-        String curType = feedbackTypeTxt.getText().toString();
+        String curType = mFeedbackTypeTxt.getText().toString();
         for (RadioButton btn : rbList) {
             if (btn.getText().toString().equals(curType)) {
                 radioGroup.check(btn.getId());
@@ -150,14 +150,14 @@ public class FeedbackActivity extends SwipeBackActivity {
 
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(feedbackContentEdit.getText().toString())) {
+        if (!TextUtils.isEmpty(mFeedbackContentEdit.getText().toString())) {
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("提示")
                     .setMessage("您有正在编辑的内容，退出将不保存") // todo 可自动保存上一次编辑的内容
                     .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            feedbackContentEdit.setText("");
+                            mFeedbackContentEdit.setText("");
                             onBackPressed();
                         }
                     })
