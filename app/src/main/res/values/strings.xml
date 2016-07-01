@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">爱看知乎</string>
+    <string name="app_name">知之乎</string>
 
     <string name="bottom_bar_tab_1">精选</string>
     <string name="bottom_bar_tab_2">大 V</string>
@@ -9,7 +9,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_home">爱看知乎</string>
+    <string name="title_activity_home">知之乎</string>
     <string name="title_activity_post_answers">PostAnswersActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
