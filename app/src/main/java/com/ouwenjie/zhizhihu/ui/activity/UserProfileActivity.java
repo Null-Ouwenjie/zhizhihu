@@ -123,7 +123,7 @@ public class UserProfileActivity extends SwipeBackActivity {
                 LLog.e("get open type = ", openType);
                 if (openType == 1) {
                     Intent intent = new Intent(getContext(), WebBrowserActivity.class);
-                    intent.putExtra("url", url);
+                    intent.putExtra(WebBrowserActivity.URL, url);
                     startActivity(intent);
                 } else if (openType == 0) {
                     boolean hasZhiHuClient = isAvilible(UserProfileActivity.this, ZhiHu.PACKAGE_NAME);

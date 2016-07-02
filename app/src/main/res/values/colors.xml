@@ -11,7 +11,7 @@
     <color name="tab_not_select">#666666</color>
 
     <color name="pink_theme_primary">#E91E63</color>
-    <color name="pink_theme_primary_dark">#C2185B</color>
+    <color name="pink_theme_primary_dark">#E91E63</color>
     <color name="pink_theme_primary_light">#F8BBD0</color>
     <color name="pink_theme_accent">#E040FB</color>
     <color name="pink_theme_primary_text">#212121</color>

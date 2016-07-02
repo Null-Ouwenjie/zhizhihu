@@ -76,7 +76,7 @@ public class MyFavoriteActivity extends SwipeBackActivity {
                 String aId = answer.getAnswerid();
                 String url = String.format(ZhiHu.QUESTION_BASE_URL + "%s/answer/%s", qId, aId);
                 Intent intent = new Intent(getContext(), WebBrowserActivity.class);
-                intent.putExtra("url", url);
+                intent.putExtra(WebBrowserActivity.URL, url);
                 startActivity(intent);
 
 //                boolean hasZhiHuClient = isAvilible(PostAnswersActivity.this, ZhiHu.PACKAGE_NAME);

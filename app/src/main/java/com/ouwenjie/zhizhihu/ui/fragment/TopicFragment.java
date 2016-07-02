@@ -117,7 +117,7 @@ public class TopicFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getContext(), WebBrowserActivity.class);
-                intent.putExtra("url", mTopics.get(position).getTargetUrl());
+                intent.putExtra(WebBrowserActivity.URL, mTopics.get(position).getTargetUrl());
                 startActivity(intent);
             }
         });

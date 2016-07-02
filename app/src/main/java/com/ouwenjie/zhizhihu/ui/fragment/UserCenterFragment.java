@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +23,13 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.ouwenjie.zhizhihu.R;
-import com.ouwenjie.zhizhihu.common.Constant;
 import com.ouwenjie.zhizhihu.common.LLog;
 import com.ouwenjie.zhizhihu.common.ThemeManager;
 import com.ouwenjie.zhizhihu.model.api.ZhiHu;
-import com.ouwenjie.zhizhihu.model.entity.SearchUser;
 import com.ouwenjie.zhizhihu.model.entity.UserDetail;
-import com.ouwenjie.zhizhihu.model.mImp.ApiImp;
+import com.ouwenjie.zhizhihu.presenter.UserCenterPresenter;
 import com.ouwenjie.zhizhihu.ui.activity.AboutUsActivity;
 import com.ouwenjie.zhizhihu.ui.activity.FeedbackActivity;
 import com.ouwenjie.zhizhihu.ui.activity.HomeActivity;
@@ -43,7 +39,6 @@ import com.ouwenjie.zhizhihu.ui.activity.SettingsActivity;
 import com.ouwenjie.zhizhihu.ui.activity.UserSearchActivity;
 import com.ouwenjie.zhizhihu.ui.activity.WebBrowserActivity;
 import com.ouwenjie.zhizhihu.ui.viewInterface.UserCenterViewInterface;
-import com.ouwenjie.zhizhihu.utils.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +46,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Subscriber;
 
 /**
  * 精选  -->  推荐
  * Created by 文杰 on 2015/10/19.
  */
-public class UserCenterFragment extends BaseFragment implements UserCenterViewInterface, View.OnClickListener {
+public class UserCenterFragment extends BaseFragment
+        implements UserCenterViewInterface, View.OnClickListener {
 
     private HomeActivity mHomeActivity;
 
@@ -90,9 +85,9 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
 
     private Adapter mAdapter;
 
-    private boolean mHasBindUser;
-    private UserDetail mUserDetailInfo;
     private List<UserDetail.TopAnswer> mTopAnswers;
+
+    private UserCenterPresenter mPresenter;
 
     public UserCenterFragment() {
     }
@@ -130,47 +125,22 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
 
         initView();
 
+        mPresenter = new UserCenterPresenter(this);
+        mPresenter.create();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        String userString = PreferencesUtil.getString(getContext().getApplicationContext(), Constant.KEY_BIND_USER);
-        if (!TextUtils.isEmpty(userString)) {
-            mHasBindUser = true;
-            final SearchUser user = new Gson().fromJson(userString, SearchUser.class);
-            new ApiImp().getUserDetail(user.getHash())
-                    .subscribe(new Subscriber<UserDetail>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(UserDetail userDetail) {
-                            mUserDetailInfo = userDetail;
-                            initData();
-                        }
-                    });
-        } else {
-            mHasBindUser = false;
-            Glide.with(this)
-                    .load(R.drawable.ic_default_avatar)
-                    .into(mUserAvatarImg);
-            mUserDescriptionTxt.setText("请点击绑定自己的知乎账号");
-        }
-
+        mPresenter.loadData();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mPresenter.destroy();
     }
 
     private void initView() {
@@ -183,7 +153,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UserDetail.TopAnswer answer = mUserDetailInfo.getTopanswers().get(position);
+                UserDetail.TopAnswer answer = mTopAnswers.get(position);
                 String url = "http://www.zhihu.com" + answer.getLink();
                 LLog.e("get url = ", url);
                 int openType = Integer.parseInt(getContext().getSharedPreferences("com.ouwenjie.kzhihu_preferences", Activity.MODE_PRIVATE)
@@ -191,7 +161,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
                 LLog.e("get open type = ", openType);
                 if (openType == 1) {
                     Intent intent = new Intent(getContext(), WebBrowserActivity.class);
-                    intent.putExtra("url", url);
+                    intent.putExtra(WebBrowserActivity.URL, url);
                     startActivity(intent);
                 } else if (openType == 0) {
                     boolean hasZhiHuClient = isAvilible(getContext(), ZhiHu.PACKAGE_NAME);
@@ -260,32 +230,33 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         mMyTrendsListView.addHeaderView(headerView);
     }
 
-    private void initData() {
-        mTopAnswers.addAll(mUserDetailInfo.getTopanswers());
+    @Override
+    public void initData(UserDetail userDetailInfo) {
+        mTopAnswers.addAll(userDetailInfo.getTopanswers());
         mAdapter.notifyDataSetChanged();
 
         Glide.with(this)
-                .load(mUserDetailInfo.getAvatar())
+                .load(userDetailInfo.getAvatar())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mUserAvatarImg);
 
-        mUserDescriptionTxt.setText(mUserDetailInfo.getDescription());
-        mUserSignatureTxt.setText(mUserDetailInfo.getSignature());
+        mUserDescriptionTxt.setText(userDetailInfo.getDescription());
+        mUserSignatureTxt.setText(userDetailInfo.getSignature());
 
-        mAgreeCountTxt.setText(mUserDetailInfo.getDetail().getAgree());
-        mFollowerCountTxt.setText(mUserDetailInfo.getDetail().getFollower());
-        mFavCountTxt.setText(mUserDetailInfo.getDetail().getFav());
-        mAskCountTxt.setText(mUserDetailInfo.getDetail().getAsk());
-        mAnswerCountTxt.setText(mUserDetailInfo.getDetail().getAnswer());
-        mPostCountTxt.setText(mUserDetailInfo.getDetail().getPost());
+        mAgreeCountTxt.setText(userDetailInfo.getDetail().getAgree());
+        mFollowerCountTxt.setText(userDetailInfo.getDetail().getFollower());
+        mFavCountTxt.setText(userDetailInfo.getDetail().getFav());
+        mAskCountTxt.setText(userDetailInfo.getDetail().getAsk());
+        mAnswerCountTxt.setText(userDetailInfo.getDetail().getAnswer());
+        mPostCountTxt.setText(userDetailInfo.getDetail().getPost());
 
         List<String> xData = new ArrayList<>();
         List<Entry> answerDatas = new ArrayList<>();
         List<Entry> agreeDatas = new ArrayList<>();
         List<Entry> followerDatas = new ArrayList<>();
 
-        for (int i = 0; i < mUserDetailInfo.getTrend().size(); i++) {
-            UserDetail.Trend trend = mUserDetailInfo.getTrend().get(i);
+        for (int i = 0; i < userDetailInfo.getTrend().size(); i++) {
+            UserDetail.Trend trend = userDetailInfo.getTrend().get(i);
             xData.add(trend.getDate());
             answerDatas.add(new Entry(Float.parseFloat(trend.getAnswer()), i));
             agreeDatas.add(new Entry(Float.parseFloat(trend.getAgree()), i));
@@ -314,6 +285,14 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         mFollowerChart.invalidate();
 
 
+    }
+
+    @Override
+    public void showDefaultInfo() {
+        Glide.with(getContext())
+                .load(R.drawable.ic_default_avatar)
+                .into(mUserAvatarImg);
+        mUserDescriptionTxt.setText("请点击绑定自己的知乎账号");
     }
 
     public boolean isIntentAvailable(Intent intent) {
@@ -351,7 +330,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterViewIn
         switch (v.getId()) {
             case R.id.user_avatar_img:
             case R.id.user_description_txt:
-                if (mHasBindUser) {
+                if (mPresenter.hasBindUser()) {
 
                 } else {
                     startActivity(new Intent(getContext(), UserSearchActivity.class));

@@ -1,4 +1,4 @@
-# zhizhihu
+# 知之乎   
 zhihu.com Unofficial Client for Android   
 
 >基于 MVP 模式，使用 Retrofit 2 + RxJava 做网络请求等   
