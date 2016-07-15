@@ -81,7 +81,7 @@ public class PostListPresenter extends MVPPresenter<PostListViewInterface> {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        doRxError(e);
                     }
 
                     @Override

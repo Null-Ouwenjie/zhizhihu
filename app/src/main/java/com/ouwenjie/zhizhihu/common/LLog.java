@@ -8,12 +8,12 @@ import com.ouwenjie.zhizhihu.AppConfig;
 /**
  * 调试工具类 (调试模式下：日志将被打印)
  *
- * @author ouwenjie
+ * @author  ouwenjie
  * @version 2016年3月16日 13:50:09
  */
 public class LLog {
 
-    public static final String TAG = "Lightstao";
+    public static final String TAG = "Zhizhihu";
 
     // verbose
     public static final int LOG_LEVEL_V = 1;

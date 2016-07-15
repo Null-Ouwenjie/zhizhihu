@@ -32,10 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiServiceFactory {
 
-    private static volatile OkHttpClient client = null;
+    private static volatile OkHttpClient sHttpClient = null;
 
-    private static ApiService apiService = null;
+    private static ApiService sApiService = null;
 
+    // 为兼容 Realm 和 Gson
     private static Gson gson = new GsonBuilder()
             .setExclusionStrategies(new ExclusionStrategy() {
                 @Override
@@ -51,34 +52,34 @@ public class ApiServiceFactory {
             .create();
 
     public static synchronized ApiService getApiService() {
-        if (client == null) {
+        if (sHttpClient == null) {
             initHttpClient();
         }
-        if (apiService == null) {
+        if (sApiService == null) {
             synchronized (ApiService.class) {
-                if (apiService == null) {
+                if (sApiService == null) {
                     Retrofit retrofit = new Retrofit.Builder()
-                            .client(client)
+                            .client(sHttpClient)
                             .baseUrl(AppConfig.KZH_BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create(gson))
                             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                             .build();
-                    apiService = retrofit.create(ApiService.class);
+                    sApiService = retrofit.create(ApiService.class);
                 }
             }
         }
-        return apiService;
+        return sApiService;
     }
 
     public static synchronized OkHttpClient getHttpClient() {
-        if (client == null) {
+        if (sHttpClient == null) {
             initHttpClient();
         }
-        return client;
+        return sHttpClient;
     }
 
     /**
-     * 每个获取 APIService 的方法都在先检测 client 是否为空
+     * 每个获取 APIService 的方法都在先检测 sHttpClient 是否为空
      */
     private static void initHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -93,7 +94,7 @@ public class ApiServiceFactory {
         }
         builder.addNetworkInterceptor(HttpInterceptor);
         builder.addInterceptor(HttpInterceptor);
-        client = builder.build();
+        sHttpClient = builder.build();
     }
 
     private static final Interceptor LoggingInterceptor = new Interceptor() {

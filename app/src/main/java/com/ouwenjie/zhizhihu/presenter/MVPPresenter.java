@@ -26,8 +26,7 @@ import com.ouwenjie.zhizhihu.utils.NetworkUtil;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Interface that represents a MVPPresenter in the model view presenter Pattern
- * defines methods to manage the Activity / Fragment lifecycle
+ * Presenter 抽象类，定义了基本的类型和流程
  */
 public abstract class MVPPresenter<T extends MVPView> {
 
@@ -60,7 +59,7 @@ public abstract class MVPPresenter<T extends MVPView> {
     protected void doRxError(Throwable e) {
         Logger.t("doRxError=> ").e(e.getMessage());
         if (e instanceof ModelErrorException) {
-            // 网络请求成功，但 code != 1，则显示后台的 message
+            // 网络请求成功，但出现错误，则显示后台的 message
             mViewInterface.toast(e.getMessage());
         } else {
             // 网络错误
